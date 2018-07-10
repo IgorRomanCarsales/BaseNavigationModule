@@ -1,8 +1,8 @@
 # Base Navigation Module ![CI status](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-Base Navigation Module is a Android library for centralizing all navigation, both for modules and for the project. 
+Base Navigation Module is an Android library for centralizing all navigation, both for others modules and for the project. 
 
-We can also find different configurations so that we can customize the push or pop actions of fragments or activities.
+Through of different configurations we can customize the push or pop actions of fragments or activities.
 
 ## Installation
 
@@ -11,10 +11,12 @@ Add dependencies in .gradle
  implementation project(':basenavigationmodule')
 
 ```
-
 ## Introduction
 
-In this library was implemented the basis of navigation for both tablet and phone. For this purpose, we have two types of navigation. One is a normal navigation, which means that it is an activity and the fragments are being replaced. The second type is a navigation with a bottom navigation, in which we have (in tablet), a screen divided in two (multi pane), in which a listed fragment (rootFragment) and a fragment of detail (detailFragment) are shown. 
+This library implementes the basis of navigation for both tablet and phone. For this purpose, we have two types of navigation:
+
+- Normal navigation, which means that it is an activity and the fragments are being replaced. 
+- Navigation with a bottom navigation, in which we have (in tablet), a screen divided in two (multi pane), in which a listed fragment (rootFragment) and a fragment of detail (detailFragment) are shown.  
 
 ## Bottom navigation
 
