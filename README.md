@@ -34,15 +34,15 @@ Tablet:
 
 As we can see from the images, both for tablet and phone we have patterns, these are:
 
-a) rootContainer: we will call the first view to be displayed after pressing a menu root. For tablet help to know which view is shown on the left (root) and which ones go to the right of the screen.
+a) rootContainer: We will call the first view to be displayed after pressing a menu root. For tablet help to know which view is shown on the left (root) and which ones go to the right of the screen.
 
-b) detailContainer: we will call detail everything that comes after the root. This phone container is optional, but in tablet is mandatory, as all navigation will be in that frame.
+b) detailContainer: We will call detail everything that comes after the root. This container in a phone is optional, but in tablet is mandatory, as all navigation will be in that frame.
 
-c) containerFrames: this is very important, here the frames are distributed to give a tablet or phone format. E.g. if I want to have a split screen, I must first have a Linear layout that supports the splitting and is provided. 
+c) containerFrames: This is very important, here the frames are distributed to give a tablet or phone format. E.g. if I want to have a split screen, I must first have a Linear layout that supports the splitting and is provided. 
 
-Ej tablet: 
+Ex. Tablet: 
 
-```xml
+```XML
   <LineLayout
         android:id="@+id/containerFramesNavigation"
         android:layout_width="0dp"
@@ -56,29 +56,25 @@ Ej tablet:
         android:weightSum="100">
 
         <FrameLayout
-            android:id="@+id/fragmentContainerList"
+            android:id="@+id/fragmentContainerRoot"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="40">
-        </FrameLayout>>
+            android:layout_weight="40" />
 
         <FrameLayout
-            android:id="@+id/fragmentContainer"
+            android:id="@+id/fragmentContainerDetail"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/navigation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_weight="60">
-
-        </FrameLayout>
-
+            android:layout_weight="60" />
     </LinearLayout>
 ``` 
-E.g. phone:
+Ex. Phone:
 
-```xml
+```XML
    <RelativeLayout
         android:id="@+id/containerFramesNavigation"
         android:layout_width="0dp"
@@ -91,37 +87,33 @@ E.g. phone:
         android:animateLayoutChanges="true">
 
         <FrameLayout
-            android:id="@+id/fragmentContainerList"
+            android:id="@+id/fragmentContainerRoot"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>>
+            android:layout_height="match_parent" />
 
+        <!-- optional -->
         <FrameLayout
-            android:id="@+id/fragmentContainer"
+            android:id="@+id/fragmentContainerDetail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-          <!-- optional -->
-
-        </FrameLayout>
-
+            app:layout_constraintTop_toTopOf="parent" />
     </RelativeLayout>
 ```
 
 c) BottomNavigation: It is the bottom navigation that has the menus 
 
-For bottom navigation to work correctly, it must be extended from BaseModuleBottonNavigationActivity(), which generates mandatory parameters for its operation:
+For bottom navigation to work correctly, the activity it must be extends from BaseModuleBottonNavigationActivity(), with this it is implements the parameters and functions for its operation:
 
-```java
+```Kotlin
  RetailActivity : BaseModuleBottonNavigationActivity() {
 
     override fun layoutBottonId(): Int = R.layout.activity_base_bottom_navigation
 
-    override fun rootFrameContainer(): FrameLayout = findViewById<FrameLayout>(R.id.fragmentContainerList)
+    override fun rootFrameContainer(): FrameLayout = findViewById<FrameLayout>(R.id.fragmentContainerRoot)
 
-    override fun detailFrameContainer(): FrameLayout = findViewById<FrameLayout>(R.id.fragmentContainer)
+    override fun detailFrameContainer(): FrameLayout = findViewById<FrameLayout>(R.id.fragmentContainerDetail)
 
     override fun containerFrameViewGroup(): ViewGroup = findViewById(R.id.containerFramesNavigation)
 
@@ -153,22 +145,20 @@ For bottom navigation to work correctly, it must be extended from BaseModuleBott
 
 menu.xml
 
-```xml
+```XML
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_home"
         android:icon="@drawable/selector_ic_home"
-        android:orderInCategory="0"
-        />
+        android:orderInCategory="0" />
     <item
         android:id="@+id/menu_buy"
         android:icon="@drawable/selector_ic_buy"
-        android:orderInCategory="1"/>
-
+        android:orderInCategory="1" />
     <item
         android:id="@+id/menu_my_account"
         android:icon="@drawable/selector_ic_member_center"
-        android:orderInCategory="2"/>
+        android:orderInCategory="2" />
 </menu>
 
 ```
@@ -188,18 +178,35 @@ menu.xml
    9) fun emptyFragment(): Fragment = Here you configure an empty Fragment 
 
 
-## Standa navigation
+## Standard navigation
 
-For normal navigation (replace fragments), it must extend from the BaseModuleNavigationActivity() class. And in turn, 4 mandatory methods must be implemented:
+This navigation is composed of a single frame
 
-1) fun layoutContainerId(): Int : xml of the activity
-2) fun frameContaier(): Frame Layout container for all fragments
-3) fun initView(savedInstanceState: Bundle?) : is to start the view, here you must add the root fragment to start the activity with the created fragment
-4) fun savedIntanceOfData(outState: Bundle?) : is to save any information that is needed when the view is onPause or restarted.
+```XML
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/containerFrameNavigation"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fragmentContainerFullScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+ </RelativeLayout>
+``` 
+For normal navigation (replace fragments), it must extend from the BaseModuleNavigationActivity() class. And in turn, four mandatory methods must be implemented:
+
+1) fun layoutContainerId(): Int = Xml of the activity
+2) fun frameContaier() = Frame Layout container for all fragments
+3) fun initView(savedInstanceState: Bundle?) = Is to start the view, here you must add the root fragment to start the activity with the created fragment
+4) fun savedIntanceOfData(outState: Bundle?) = Is to save any information that is needed when the view is onPause or restarted.
 
 Example
 
-```java
+```Kotlin
 class SessionActivity : BaseModuleNavigationActivity() {
 
     override fun layoutContainerId(): Int = R.layout.activity_full_screen
@@ -223,51 +230,42 @@ class SessionActivity : BaseModuleNavigationActivity() {
 ```
 ## BaseNavigationHelperListener
 
-BaseNavigationHelperListener is a class interface where you can use default navigation settings. 
-These are functions of this class:
+BaseNavigationHelperListener is an interface with which to implement default navigation settings. These are the declared functions:
 
-```java
+```Kotlin
     fun pushFragment(fragment: Fragment) {}
     fun pushFragmentRootDetail(fragment: Fragment) {}
     fun addFragment(fragment: Fragment, tag: String?) {}
     fun isShowingFragment(fragment: Fragment): Boolean {
         return true
     }
-
     fun changeCurrentPosition(position: Int) {}
     fun removeFragment(fragment: Fragment) {}
     fun removeAllCurrentStack() {}
     fun getLastFragmentAdded(): Fragment? {
         return null
     }
-
     fun getListBaseFragment(): List<Fragment> {
         return emptyList()
     }
-
     fun lasElemetofStack(): String {
         return String.empty()
     }
-
     fun popFromStack()
 ```
 
 Definitions: 
 
-1) pushFragment(fragment: Fragment) = receives a fragment and adds it to the navigation stack
-2) pushFragmentRootDetail(fragment: Fragment) = receives a rootfragment and adds to top the navigation stack
-3) addFragment(fragment: Fragment, tag: String?) = receives a fragment and adds it to the stack, the difference with a push is that it is added but there is no record with a tag.... it is recommended to use this function only when you add the same fragment that is already in the navigation stack
-4) isShowingFragment(fragment: Fragment) = receives a fragment and returns it if it is in the navigation stack (true = if found, false = if not found)
-
-5) changeCurrentPosition(position: Int) = change of position of the bottom navigation
-6) removeFragment(fragment: Fragment) = receives a fragment and removes it
-7) removeAllCurrentStack() = removes the entire stack except for the root fragment 
+1) pushFragment(fragment: Fragment) = Receives a fragment and adds it to the navigation stack
+2) pushFragmentRootDetail(fragment: Fragment) = Receives a rootfragment and adds to top the navigation stack
+3) addFragment(fragment: Fragment, tag: String?) = Receives a fragment and adds it to the stack, the difference with a push is that it is added but there is no record with a tag.... It is recommended to use this function only when you add the same fragment that is already in the navigation stack
+4) isShowingFragment(fragment: Fragment) = Receives a fragment and returns it if it is in the navigation stack (true = if found, false = if not found)
+5) changeCurrentPosition(position: Int) = Changes of position of the bottom navigation
+6) removeFragment(fragment: Fragment) = Receives a fragment and removes it
+7) removeAllCurrentStack() = Removes the entire stack except for the root fragment 
 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
